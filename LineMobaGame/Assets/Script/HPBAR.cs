@@ -4,7 +4,7 @@
 public class HPBAR : MonoBehaviour {
 
     
-
+// test
 	void Start () {
 	
 	}
