@@ -3,8 +3,7 @@ using System.Collections;
 
 public class Logic : MonoBehaviour
 {
-//11
-//11
+
 
     public GameObject mySpaun;
     public GameObject mySpaun1;
@@ -15,6 +14,8 @@ public class Logic : MonoBehaviour
 
     public GameObject enemyunits;
     public GameObject units;
+
+    float KDA = 5f;
 
     // Use this for initialization
     void Start()
@@ -29,7 +30,7 @@ public class Logic : MonoBehaviour
     /* Спаун юнита, передем КТ, тип юнита, сторону */
     public void CreateUnit()
     {
-        for (int a = 0; a < 2; a++)
+        for (int a = 0; a < 3; a++)
         {
             Instantiate(units, mySpaun.transform.position, Quaternion.LookRotation(Vector3.forward));
             Instantiate(units, mySpaun1.transform.position, Quaternion.LookRotation(Vector3.forward));
@@ -37,10 +38,24 @@ public class Logic : MonoBehaviour
 
             Instantiate(enemyunits, enemySpaun.transform.position, Quaternion.LookRotation(Vector3.back));
             Instantiate(enemyunits, enemySpaun1.transform.position, Quaternion.LookRotation(Vector3.forward));
-            Instantiate(enemyunits, enemySpaun2.transform.position, Quaternion.LookRotation(Vector3.forward));
+            Instantiate(enemyunits, enemySpaun2.transform.position, Quaternion.LookRotation(Vector3.back));
 
         }
 
+    }
+
+    void Update()
+    {
+        KDspawn();
+    }
+    void KDspawn()
+    {
+        KDA -= Time.deltaTime;
+        if (KDA <= 0)
+        {
+            CreateUnit();
+            KDA = 5f;
+        }
     }
 
 

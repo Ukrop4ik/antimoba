@@ -1,12 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.UI;
 
-public class UnitLogic : MonoBehaviour {
+public class UnitLogic : MonoBehaviour
+{
 
-    public bool isEnemy = false;
+   
 
-    public int firstPoint;
+    public int firstPoint = 0;
     public float HP; // здоровье
     public float DAMAGE; // урон
     public float KDA; // перезарядка
@@ -16,26 +18,44 @@ public class UnitLogic : MonoBehaviour {
     public float DAMAGEboost = 1; // множитель урона
     public float KDAboost = 1; // множитель скорости перезарядки
 
+    public bool isEnemy = false;
     public bool canAttack = false;
 
-    
+    Animator anim;
+    NavMeshAgent agent;
+
 
 
     // Use this for initialization
-    void Start () {
-        NavMeshAgent agent = GetComponent<NavMeshAgent>();
-        GameObject target;
+    void Start()
+    {
+        agent = GetComponent<NavMeshAgent>();
+        anim = gameObject.GetComponent<Animator>();
+        anim.SetBool("Run", true);
 
-        
 
         HP = 100f;
         DAMAGE = 10f;
         KDA = 1f;
 
-       
-        
-        
+        // триггер коллайдер
+        var collider = gameObject.AddComponent<SphereCollider>();
+        collider.radius = 0.01524855f;
+        collider.center = new Vector3(0, 0.07f, 0);
+        collider.isTrigger = true;
 
+
+
+
+
+        // определяем принадлежность моба к стороне
+
+
+    }
+
+    void Update()
+    {
+        GameObject target;
         switch (firstPoint)
         {
             case 1:
@@ -52,16 +72,15 @@ public class UnitLogic : MonoBehaviour {
                 break;
 
         }
+        if (firstPoint != 0)
+        {
+            var collider = gameObject.GetComponent<SphereCollider>();
+            collider.radius = 0.1524855f;
+        }
 
-        // определяем принадлежность моба к стороне
-   
 
-    }
-
-    void Update()
-    {
         //смерть
-        if (HP <= 0) { death();}
+        if (HP <= 0) { death(); }
 
         // счетчик кулдауна атаки
         if (canAttack == false)
@@ -77,10 +96,10 @@ public class UnitLogic : MonoBehaviour {
     }
 
     // метод нанесения урона
-    void Damage(float a)
+    bool Damage(float a)
     {
         HP -= a;
-        
+        return HP <= 0;
     }
     void death()
     {
@@ -90,17 +109,38 @@ public class UnitLogic : MonoBehaviour {
     // обьект попал в агро зону моба
     void OnTriggerStay(Collider other)
     {
-        if (gameObject.tag != other.tag && other.name != "Terrain" )
+        if (anim == null)
         {
-            isEnemy = true;
-            if (canAttack == true && isEnemy)
-            {
-                Debug.Log("Атакуют!" + other.name);
-                Damage(DAMAGE * DAMAGEboost);
-            }
-            
+            return;
         }
-        else isEnemy = false;
+        var posslist = new List<string>();
+        posslist.Add("RedMob");
+        posslist.Add("BlueMob");
+
+        if (posslist.Contains(gameObject.tag) && posslist.Contains(other.tag))
+        {
+            if (gameObject.tag != other.tag)
+            {
+                anim.SetBool("Attack", true);
+                
+                if (canAttack == true)
+                {
+                    Debug.Log("Атакуют!" + other.name);
+                    var unit = other.GetComponent<UnitLogic>();
+                    isEnemy = !unit.Damage(DAMAGE * DAMAGEboost);
+                    canAttack = false;
+                    if (!isEnemy)
+                    {
+                        anim.SetBool("Attack", false);
+                    }
+                }
+            }
+        }
+        if (!isEnemy)
+        {
+            anim.SetBool("Attack", false);
+        }
+        //"ditto";
 
 
 

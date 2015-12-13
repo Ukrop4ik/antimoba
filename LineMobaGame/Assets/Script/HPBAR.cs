@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
-
+using System.Collections;
 
 public class HPBAR : MonoBehaviour {
 
     
-// test 1 еекеек
+
 	void Start () {
 	
 	}
