@@ -30,7 +30,7 @@ public class Logic : MonoBehaviour
     /* Спаун юнита, передем КТ, тип юнита, сторону */
     public void CreateUnit()
     {
-        for (int a = 0; a < 2; a++)
+        for (int a = 0; a < 1; a++)
         {
             Instantiate(units, mySpaun.transform.position, Quaternion.LookRotation(Vector3.forward));
             Instantiate(units, mySpaun1.transform.position, Quaternion.LookRotation(Vector3.forward));

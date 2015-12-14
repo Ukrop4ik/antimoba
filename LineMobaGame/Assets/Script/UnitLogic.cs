@@ -21,14 +21,22 @@ public class UnitLogic : MonoBehaviour
     public bool isEnemy = false;
     public bool canAttack = false;
 
+    public float HPCase;
+    public float HPbuffer;
+
     Animator anim;
     NavMeshAgent agent;
+    public GameObject bar;
 
 
 
     // Use this for initialization
     void Start()
     {
+      //  bar = gameObject.transform.transform.Find("Image") .gameObject;
+
+        
+
         agent = GetComponent<NavMeshAgent>();
         anim = gameObject.GetComponent<Animator>();
         anim.SetBool("Run", true);
@@ -37,6 +45,10 @@ public class UnitLogic : MonoBehaviour
         HP = 100f;
         DAMAGE = 10f;
         KDA = 1f;
+        HPCase = HP;
+        HPbuffer = HP;
+
+        Debug.Log(HPCase);
 
         // триггер коллайдер
         var collider = gameObject.AddComponent<SphereCollider>();
@@ -55,6 +67,7 @@ public class UnitLogic : MonoBehaviour
 
     void Update()
     {
+        
         GameObject target;
         switch (firstPoint)
         {
@@ -93,12 +106,23 @@ public class UnitLogic : MonoBehaviour
             }
         }
 
+        // передача ХП в бар
+        if (HP < HPCase)
+        {
+            bar.GetComponent<HPBAR>().changeWidth();
+            HPCase = HP;
+            
+        }
+
     }
 
     // метод нанесения урона
     bool Damage(float a)
     {
         HP -= a;
+        
+        
+        
         return HP <= 0;
     }
     void death()
@@ -125,7 +149,7 @@ public class UnitLogic : MonoBehaviour
                 
                 if (canAttack == true)
                 {
-                    Debug.Log("Атакуют!" + other.name);
+                 
                     var unit = other.GetComponent<UnitLogic>();
                     isEnemy = !unit.Damage(DAMAGE * DAMAGEboost);
                     canAttack = false;
