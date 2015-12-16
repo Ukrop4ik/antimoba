@@ -28,7 +28,7 @@ public class HPBAR : MonoBehaviour {
         
         curWidth = ( Unit.HP / Unit.HPbuffer);
         maxWidth =  curWidth;
-        Debug.Log(curWidth);
+        
         var rect = gameObject.GetComponent<RectTransform>();
         rect. localScale = new Vector3(maxWidth, 1 , 1);
         

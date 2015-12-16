@@ -7,9 +7,11 @@ using UnityEngine.UI;
 public class UnitLogic : MonoBehaviour
 {
 
+    public float UnitID;
+    
+    public GameObject _logic;
 
-
-    public int firstPoint = 0;
+    public int firstPoint;
     public float HP; // здоровье
     public float DAMAGE; // урон
     public float KDA; // перезарядка
@@ -33,12 +35,14 @@ public class UnitLogic : MonoBehaviour
     Animator anim;
     NavMeshAgent agent;
     public GameObject bar;
-    UnitLogic enemyStat;
+    public UnitLogic enemyStat;
+    public string targetname;
 
 
 
     public GameObject[] enemis;
     public GameObject[] targets;
+    public GameObject[] kt;
 
 
 
@@ -49,7 +53,8 @@ public class UnitLogic : MonoBehaviour
     {
         //  bar = gameObject.transform.transform.Find("Image") .gameObject;
 
-
+        UnitID = Random.Range(1f, 100f);
+        gameObject.name += UnitID;
 
         agent = GetComponent<NavMeshAgent>();
         anim = gameObject.GetComponent<Animator>();
@@ -78,7 +83,7 @@ public class UnitLogic : MonoBehaviour
     void Update()
     {
         //выбор точки маршрута
-        if (firstPoint == 0)
+        if (firstPoint != 0)
         {
             switch (firstPoint)
             {
@@ -98,19 +103,26 @@ public class UnitLogic : MonoBehaviour
             }
         }
 
+
         // нанесение урона 
-        if (enemis[1] != null)
+        if (enemis[0] != null && isEnemy == true && enemis[0].tag != "DeadBody")
         {
             float _damage;
 
             if (canAttack == true)
             {
-                _damage = hit(enemyStat.DAMAGE, enemyStat.DAMAGEboost);
                 anim.SetBool("Attack", true);
-                HP -= _damage;
+                _damage = hit(DAMAGE, DAMAGEboost); 
+                enemis[0].GetComponent<UnitLogic>().HP -= _damage;
+                
                 canAttack = false;
+
+
+
+
             }
             
+
         }
 
 
@@ -122,7 +134,7 @@ public class UnitLogic : MonoBehaviour
 
 
         //смерть
-        if (HP <= 0) { death(); gameObject.tag = "DeadBody"; HP = 0; }
+        if (HP <= 0) { gameObject.tag = "DeadBody"; death();  HP = 0;  }
 
         // счетчик перед смертью
         if (kill == true)
@@ -157,11 +169,8 @@ public class UnitLogic : MonoBehaviour
     }
 
     
-    bool Damage(float a)
-    {
-        HP -= a;
-        return HP <= 0;
-    }
+
+
     void death()
     {
 
@@ -169,7 +178,7 @@ public class UnitLogic : MonoBehaviour
 
         kill = true;
         isEnemy = false;
-        canAttack = true;
+        canAttack = false;
 
     }
 
@@ -181,36 +190,52 @@ public class UnitLogic : MonoBehaviour
     // обьект попал в агро зону моба
     void OnTriggerStay(Collider other)
     {
+
+
+
+
+
         if (initial == true)
         {
-            enemis = new GameObject[2];
+            kt = GameObject.FindGameObjectsWithTag("KT");
+            enemis = new GameObject[1];
             targets = new GameObject[2];
             initial = false;
         }
-
         if (anim == null)
         {
             return;
         }
 
         // заметили врага
-        if ((enemis.Equals(other.gameObject) == false  && other.tag != gameObject.tag) && (other.tag == "RedMob" || other.tag == "BlueMob"))
+        if ((enemis[0] == null && other.tag != gameObject.tag) && other.tag != "KT" && other.tag != "Spaun" && other.tag != "DeadBody")
         {
-            enemis[1] = other.gameObject;
-            GetEnemyLogic();
+            enemis[0] = other.gameObject;
+            targetname = other.gameObject.name;
+            isEnemy = true;
 
             // узнали путь к врагу, запомнив старый
             if (targets[0] != other.gameObject && targets[1] != other.gameObject && other.gameObject.tag != gameObject.tag)
             {
                 targets[0] = targets[1];
-                targets[1] = enemis[1].gameObject;
+                targets[1] = enemis[0].gameObject;
             }
 
 
             // идем к врагу
             agent.destination = targets[1].transform.position;
+            if (enemis[0] == other.gameObject && other.tag == "DeadBody")
+            {
+                enemis[0] = null;
+                targets[1] = targets[0];
+                targets[0] = null;
+
+                agent.destination = targets[1].transform.position;
+
+            }
 
         }
+        else if (enemis[0] == null && other.gameObject.tag != "RedMob") { isEnemy = false; anim.SetBool("Attack", false); }
 
 
 
@@ -218,20 +243,17 @@ public class UnitLogic : MonoBehaviour
     }
     void OnTriggerExit(Collider other)
     {
-        if (enemis[1] == other.gameObject && other.tag == "DeadBody" || enemis[1] == null)
+        if (enemis[0] == other.gameObject && other.tag == "DeadBody")
         {
-            enemis[1] = null;
+            enemis[0] = null;
             targets[1] = targets[0];
             targets[0] = null;
+ 
             agent.destination = targets[1].transform.position;
 
         }
     }
 
-    void GetEnemyLogic()
-    {
-        enemyStat = enemis[1].GetComponent<UnitLogic>();
-    }
 
     void TargetSelect()
     {
