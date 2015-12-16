@@ -15,7 +15,7 @@ public class Logic : MonoBehaviour
     public GameObject enemyunits;
     public GameObject units;
 
-    float KDA = 10f;
+    float KDA = 30f;
 
     // Use this for initialization
     void Start()
@@ -54,7 +54,7 @@ public class Logic : MonoBehaviour
         if (KDA <= 0)
         {
             CreateUnit();
-            KDA = 10f;
+            KDA = 30f;
         }
     }
 

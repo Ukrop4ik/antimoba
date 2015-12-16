@@ -3,10 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
+[System.Serializable]
 public class UnitLogic : MonoBehaviour
 {
 
-   
+
 
     public int firstPoint = 0;
     public float HP; // здоровье
@@ -14,41 +15,55 @@ public class UnitLogic : MonoBehaviour
     public float KDA; // перезарядка
 
     //бусты
-    public float HPboost = 1; // множитеь здоровья
-    public float DAMAGEboost = 1; // множитель урона
-    public float KDAboost = 1; // множитель скорости перезарядки
+    public float HPboost = 1f; // множитель здоровья
+    public float DAMAGEboost = 1f; // множитель урона
+    public float KDAboost = 1f; // множитель скорости перезарядки
 
     public bool isEnemy = false;
     public bool canAttack = false;
 
-    public float HPCase;
+    public bool kill = false;
+    public float KillTime;
+
+    float HPCase;
     public float HPbuffer;
+
+    public bool initial = true;
 
     Animator anim;
     NavMeshAgent agent;
     public GameObject bar;
+    UnitLogic enemyStat;
+
+
+
+    public GameObject[] enemis;
+    public GameObject[] targets;
+
+
 
 
 
     // Use this for initialization
     void Start()
     {
-      //  bar = gameObject.transform.transform.Find("Image") .gameObject;
+        //  bar = gameObject.transform.transform.Find("Image") .gameObject;
 
-        
+
 
         agent = GetComponent<NavMeshAgent>();
         anim = gameObject.GetComponent<Animator>();
         anim.SetBool("Run", true);
 
 
-        HP = 100f;
+        HP = 100f * HPboost;
         DAMAGE = 10f;
-        KDA = 1f;
+        KDA = 2f;
+        KillTime = 4f;
         HPCase = HP;
         HPbuffer = HP;
 
-        Debug.Log(HPCase);
+   
 
         // триггер коллайдер
         var collider = gameObject.AddComponent<SphereCollider>();
@@ -58,33 +73,47 @@ public class UnitLogic : MonoBehaviour
 
 
 
-
-
-        // определяем принадлежность моба к стороне
-
-
     }
 
     void Update()
     {
-        
-        GameObject target;
-        switch (firstPoint)
+        //выбор точки маршрута
+        if (firstPoint == 0)
         {
-            case 1:
-                target = GameObject.Find("KT5");
-                agent.destination = target.transform.position;
-                break;
-            case 2:
-                target = GameObject.Find("KT3");
-                agent.destination = target.transform.position;
-                break;
-            case 3:
-                target = GameObject.Find("KT4");
-                agent.destination = target.transform.position;
-                break;
+            switch (firstPoint)
+            {
+                case 1:
+                    targets[1] = GameObject.Find("KT5");
+                    agent.destination = targets[1].transform.position;
+                    break;
+                case 2:
+                    targets[1] = GameObject.Find("KT3");
+                    agent.destination = targets[1].transform.position;
+                    break;
+                case 3:
+                    targets[1] = GameObject.Find("KT4");
+                    agent.destination = targets[1].transform.position;
+                    break;
 
+            }
         }
+
+        // нанесение урона 
+        if (enemis[1] != null)
+        {
+            float _damage;
+
+            if (canAttack == true)
+            {
+                _damage = hit(enemyStat.DAMAGE, enemyStat.DAMAGEboost);
+                anim.SetBool("Attack", true);
+                HP -= _damage;
+                canAttack = false;
+            }
+            
+        }
+
+
         if (firstPoint != 0)
         {
             var collider = gameObject.GetComponent<SphereCollider>();
@@ -93,7 +122,18 @@ public class UnitLogic : MonoBehaviour
 
 
         //смерть
-        if (HP <= 0) { death(); }
+        if (HP <= 0) { death(); gameObject.tag = "DeadBody"; HP = 0; }
+
+        // счетчик перед смертью
+        if (kill == true)
+        {
+
+            KillTime -= Time.deltaTime;
+            if (KillTime <= 0f)
+            {
+                Destroy(gameObject);
+            }
+        }
 
         // счетчик кулдауна атаки
         if (canAttack == false)
@@ -102,7 +142,7 @@ public class UnitLogic : MonoBehaviour
             if (KDA <= 0)
             {
                 canAttack = true;
-                KDA = 1f;
+                KDA = 2f;
             }
         }
 
@@ -111,64 +151,90 @@ public class UnitLogic : MonoBehaviour
         {
             bar.GetComponent<HPBAR>().changeWidth();
             HPCase = HP;
-            
+
         }
 
     }
 
-    // метод нанесения урона
+    
     bool Damage(float a)
     {
         HP -= a;
-        
-        
-        
         return HP <= 0;
     }
     void death()
     {
-        Destroy(gameObject);
+
+        anim.SetBool("Kill", true);
+
+        kill = true;
+        isEnemy = false;
+        canAttack = true;
+
     }
 
+    float hit(float a, float b)
+    {
+        float Damage = a * b;
+        return Damage;
+    }
     // обьект попал в агро зону моба
     void OnTriggerStay(Collider other)
     {
+        if (initial == true)
+        {
+            enemis = new GameObject[2];
+            targets = new GameObject[2];
+            initial = false;
+        }
+
         if (anim == null)
         {
             return;
         }
-        var posslist = new List<string>();
-        posslist.Add("RedMob");
-        posslist.Add("BlueMob");
 
-        if (posslist.Contains(gameObject.tag) && posslist.Contains(other.tag))
+        // заметили врага
+        if ((enemis.Equals(other.gameObject) == false  && other.tag != gameObject.tag) && (other.tag == "RedMob" || other.tag == "BlueMob"))
         {
-            if (gameObject.tag != other.tag)
+            enemis[1] = other.gameObject;
+            GetEnemyLogic();
+
+            // узнали путь к врагу, запомнив старый
+            if (targets[0] != other.gameObject && targets[1] != other.gameObject && other.gameObject.tag != gameObject.tag)
             {
-                anim.SetBool("Attack", true);
-                
-                if (canAttack == true)
-                {
-                 
-                    var unit = other.GetComponent<UnitLogic>();
-                    isEnemy = !unit.Damage(DAMAGE * DAMAGEboost);
-                    canAttack = false;
-                    if (!isEnemy)
-                    {
-                        anim.SetBool("Attack", false);
-                    }
-                }
+                targets[0] = targets[1];
+                targets[1] = enemis[1].gameObject;
             }
+
+
+            // идем к врагу
+            agent.destination = targets[1].transform.position;
+
         }
-        if (!isEnemy)
-        {
-            anim.SetBool("Attack", false);
-        }
-        //"ditto";
+
 
 
 
     }
+    void OnTriggerExit(Collider other)
+    {
+        if (enemis[1] == other.gameObject && other.tag == "DeadBody" || enemis[1] == null)
+        {
+            enemis[1] = null;
+            targets[1] = targets[0];
+            targets[0] = null;
+            agent.destination = targets[1].transform.position;
 
+        }
+    }
 
+    void GetEnemyLogic()
+    {
+        enemyStat = enemis[1].GetComponent<UnitLogic>();
+    }
+
+    void TargetSelect()
+    {
+
+    }
 }
