@@ -42,7 +42,7 @@ public class Logic : MonoBehaviour
     public void CreateUnit()
     {
 
-        for (int a = 0; a < 10; a++)
+        for (int a = 0; a < 3; a++)
         {
             UnitSpaun(units, mySpaun, mySpaunTarget, 1);
             UnitSpaun(units, mySpaun1, mySpaunTarget1, 2);
