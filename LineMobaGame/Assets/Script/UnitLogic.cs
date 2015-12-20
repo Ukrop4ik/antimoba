@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
-using UnityEngine.UI;
+using UnityEngine.Events;
 
 [System.Serializable]
 public class UnitLogic : MonoBehaviour
@@ -19,22 +20,24 @@ public class UnitLogic : MonoBehaviour
     //бусты
     public float HPboost = 1f; // множитель здоровья
     public float DAMAGEboost = 1f; // множитель урона
+    float boost = 0.2f; //шаг множителя
     public float KDAboost = 1f; // множитель скорости перезарядки
 
-    public bool isEnemy = false;
-    public bool canAttack = false;
+    [SerializeField] private bool isEnemy = false;
+    [SerializeField] private bool canAttack = false;
 
-    public bool kill = false;
-    public float KillTime;
+    [SerializeField] private bool kill = false;
+    private float KillTime;
 
-    float HPCase;
+    public float HPCase;
     public float HPbuffer;
 
-    public bool initial = true;
+    private bool initial = true;
+    private bool gotostart = true;
 
     Animator anim;
     NavMeshAgent agent;
-    public GameObject bar;
+    [SerializeField] private GameObject bar;
     public UnitLogic enemyStat;
     public string targetname;
 
@@ -43,10 +46,22 @@ public class UnitLogic : MonoBehaviour
     public GameObject[] enemis;
     public GameObject[] targets;
     public GameObject[] kt;
+    List<GameObject> helper = new List<GameObject>();
 
 
 
 
+
+    void Awake()
+    {
+        HP = 100f * HPboost;
+        DAMAGE = 10f;
+        KDA = 2f;
+
+        KillTime = 4f;
+        HPCase = HP;
+        HPbuffer = HP;
+    }
 
     // Use this for initialization
     void Start()
@@ -60,21 +75,30 @@ public class UnitLogic : MonoBehaviour
         anim = gameObject.GetComponent<Animator>();
         anim.SetBool("Run", true);
 
-
-        HP = 100f * HPboost;
-        DAMAGE = 10f;
-        KDA = 2f;
-        KillTime = 4f;
-        HPCase = HP;
-        HPbuffer = HP;
-
-   
-
         // триггер коллайдер
         var collider = gameObject.AddComponent<SphereCollider>();
         collider.radius = 0.01524855f;
         collider.center = new Vector3(0, 0.07f, 0);
         collider.isTrigger = true;
+
+         kt = new GameObject[4];
+
+        kt[0] = GameObject.Find("KT5");
+        kt[1] = GameObject.Find("KT3");
+        kt[2] = GameObject.Find("KT4");
+
+        if (gameObject.tag == "BlueMob")
+        {
+
+            kt[3] = GameObject.Find("KT2");
+            
+        }
+        if (gameObject.tag == "RedMob")
+        {
+
+            kt[3] = GameObject.Find("KT1");
+
+        }
 
 
 
@@ -82,25 +106,63 @@ public class UnitLogic : MonoBehaviour
 
     void Update()
     {
+        
+        if (targets[1] != null)
+        {
+            agent.destination = targets[1].transform.position;
+        }
+        if (targets[1] == null && targets [0] == null)
+        {
+            
+            
+            
+                targets[1] = GameObject.Find("KT2");
+            
+
+        }
+
+
+
+
+
+
         //выбор точки маршрута
-        if (firstPoint != 0)
+        if (firstPoint != 0 && gotostart == true)
         {
             switch (firstPoint)
             {
                 case 1:
                     targets[1] = GameObject.Find("KT5");
                     agent.destination = targets[1].transform.position;
+                    gotostart = false;
                     break;
                 case 2:
                     targets[1] = GameObject.Find("KT3");
                     agent.destination = targets[1].transform.position;
+                    gotostart = false;
                     break;
                 case 3:
                     targets[1] = GameObject.Find("KT4");
                     agent.destination = targets[1].transform.position;
+                    gotostart = false;
                     break;
 
             }
+        }
+
+        if (gameObject.tag == "BlueMob")
+
+
+
+
+        if (enemis[0] == null && gotostart == false && targets[0] != null)
+        {
+
+            targets[1] = targets[0];
+            targets[0] = null;
+
+            
+
         }
 
 
@@ -116,10 +178,6 @@ public class UnitLogic : MonoBehaviour
                 enemis[0].GetComponent<UnitLogic>().HP -= _damage;
                 
                 canAttack = false;
-
-
-
-
             }
             
 
@@ -162,6 +220,7 @@ public class UnitLogic : MonoBehaviour
         if (HP < HPCase)
         {
             bar.GetComponent<HPBAR>().changeWidth();
+            
             HPCase = HP;
 
         }
@@ -175,6 +234,9 @@ public class UnitLogic : MonoBehaviour
     {
 
         anim.SetBool("Kill", true);
+
+        targets[1] = null;
+       
 
         kill = true;
         isEnemy = false;
@@ -191,13 +253,27 @@ public class UnitLogic : MonoBehaviour
     void OnTriggerStay(Collider other)
     {
 
+        
 
+            if (gameObject.tag == other.gameObject.tag)
+            {
+            
+
+     
+            if (!helper.Contains(other.gameObject))
+            {
+                helper.Add(other.gameObject);
+            }
+            
+
+            }
+        
 
 
 
         if (initial == true)
         {
-            kt = GameObject.FindGameObjectsWithTag("KT");
+            
             enemis = new GameObject[1];
             targets = new GameObject[2];
             initial = false;
@@ -215,24 +291,17 @@ public class UnitLogic : MonoBehaviour
             isEnemy = true;
 
             // узнали путь к врагу, запомнив старый
-            if (targets[0] != other.gameObject && targets[1] != other.gameObject && other.gameObject.tag != gameObject.tag)
+            if (enemis[0] != null)
             {
+                // запомнили старый маршрут
                 targets[0] = targets[1];
-                targets[1] = enemis[0].gameObject;
-            }
 
-
-            // идем к врагу
-            agent.destination = targets[1].transform.position;
-            if (enemis[0] == other.gameObject && other.tag == "DeadBody")
-            {
-                enemis[0] = null;
-                targets[1] = targets[0];
-                targets[0] = null;
-
-                agent.destination = targets[1].transform.position;
+                //Текущий маршрут - враг
+                targets[1] = enemis[0];
 
             }
+
+
 
         }
         else if (enemis[0] == null && other.gameObject.tag != "RedMob") { isEnemy = false; anim.SetBool("Attack", false); }
@@ -245,11 +314,9 @@ public class UnitLogic : MonoBehaviour
     {
         if (enemis[0] == other.gameObject && other.tag == "DeadBody")
         {
-            enemis[0] = null;
+            
             targets[1] = targets[0];
-            targets[0] = null;
- 
-            agent.destination = targets[1].transform.position;
+            
 
         }
     }
@@ -259,4 +326,12 @@ public class UnitLogic : MonoBehaviour
     {
 
     }
+
+    public void ADboost()
+    {
+        DAMAGEboost += boost;
+        Debug.Log("Юнит усилен на: " + (DAMAGEboost - 1));
+        
+    }
+
 }

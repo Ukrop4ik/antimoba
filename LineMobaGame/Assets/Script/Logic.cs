@@ -78,7 +78,6 @@ public class Logic : MonoBehaviour
         GameObject ind = Instantiate(unit, _spaunpoint, Quaternion.FromToRotation(from, to)) as GameObject;
         UnitLogic logic = ind.GetComponent<UnitLogic>();
         logic.firstPoint = Point;
-        Debug.Log(logic.firstPoint);
     }
 
 }

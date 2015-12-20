@@ -69,9 +69,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Script\DamageManager.cs" />
+    <Compile Include="Assets\Script\EventManager.cs" />
+    <Compile Include="Assets\Script\GUImanager.cs" />
     <Compile Include="Assets\Script\HPBAR.cs" />
+    <Compile Include="Assets\Script\KTpoint.cs" />
     <Compile Include="Assets\Script\Logic.cs" />
+    <Compile Include="Assets\Script\Rotate.cs" />
     <Compile Include="Assets\Script\SpaunPoint.cs" />
+    <Compile Include="Assets\Script\StatControl.cs" />
     <Compile Include="Assets\Script\UnitLogic.cs" />
   </ItemGroup>
   <ItemGroup>
