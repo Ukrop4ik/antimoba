@@ -79,7 +79,7 @@ public class HPBAR : MonoBehaviour {
             if (HPtext != 0 && text)
             {
 
-                text.text = "- " + HPtext.ToString();
+                text.text = "- " + HPtext.ToString("0");
 
 
             }

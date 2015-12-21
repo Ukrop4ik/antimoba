@@ -33,6 +33,10 @@ public class KTpoint : MonoBehaviour {
     2 - blue
     3  - red
     */
+    bool battle;
+    bool empty;
+
+
 
     void OnTriggerStay(Collider other)
     {
@@ -46,6 +50,11 @@ public class KTpoint : MonoBehaviour {
         {
             redList.Add(other.gameObject);
             //Debug.Log("BlueMob in " + gameObject.name + " count = " + blueList.Count);
+        }
+
+        if ((gameObject.name == "KT1" || gameObject.name == "KT2") && inistart == true)
+        {
+            MainPointIni();        
         }
 
         if (other && inistart == true)
@@ -97,6 +106,7 @@ public class KTpoint : MonoBehaviour {
         }
 
 
+
     }
 
     void OnTriggerExit(Collider other)
@@ -109,55 +119,85 @@ public class KTpoint : MonoBehaviour {
         KTpointStatus = 1;
         _part1 = part1.gameObject.GetComponent<ParticleSystem>();
         _part2 = part2.gameObject.GetComponent<ParticleSystem>();
-        
+
+
+
     }
 
     void Update()
     {
+
+
+
 
         if (tictac == true)
         {
             tic -= Time.deltaTime;
             if (tic <= 0)
             {
-                tictac = false;
 
+                tictac = false;
                 RemoveUnitsinList();
 
                 BlueModCount = blueList.Count;
-               // Debug.Log("RedMob in " + gameObject.name + " count = " + RedModCount);
+                // Debug.Log("RedMob in " + gameObject.name + " count = " + RedModCount);
                 RedModCount = redList.Count;
-               // Debug.Log("BlueMob in " + gameObject.name + " count = " + BlueModCount);
+                // Debug.Log("BlueMob in " + gameObject.name + " count = " + BlueModCount);
 
+                Debug.Log("Tik-Tak");
                 tictac = true;
-                tic = 1f;
+                tic = 0.2f;
             }
         }
 
-        if (red != null && inistart == false )
+        if (red != null && inistart == false)
         {
+
+
+            battle = BlueModCount != 0 && RedModCount != 0;
+            empty = BlueModCount == 0 && RedModCount == 0;
+
+
             if (BlueModCount == 0 && RedModCount != 0 && KTpointStatus != 3)
             {
                 capture = true;
-                KTpointStatus = 3;
+                KTpointStatus = 3;      
 
             }
-            
+            else if (battle || empty)
+            {
+                capture = false;
+            }
+
+
             if (BlueModCount != 0 && RedModCount == 0 && KTpointStatus != 2)
             {
                 capture = true;
                 KTpointStatus = 2;
 
             }
-            
+            else if (battle || empty)
+            {
+                capture = false;
+            }
+
+
             if (BlueModCount == 0 && RedModCount == 0 && KTpointStatus != 1)
             {
-                capture = true;
+                
+                capture = false;
                 KTpointStatus = 1;
- 
+
             }
-            
+            else if (battle || empty)
+            {
+                capture = false;
+            }
+
+
+
         }
+        
         
 
     }
@@ -199,6 +239,22 @@ public class KTpoint : MonoBehaviour {
                 _part2.startColor = neutral;
                 image = 1;
                 break;
+        }
+    }
+
+    void MainPointIni()
+    {
+        if (gameObject.name == "KT1")
+        {
+            _part1.startColor = blue;
+            _part2.startColor = blue;
+            KTpointStatus = 2;
+        }
+        if (gameObject.name == "KT2")
+        {
+            _part1.startColor = red;
+            _part2.startColor = red;
+            KTpointStatus = 3;
         }
     }
 }

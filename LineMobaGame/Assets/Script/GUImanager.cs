@@ -17,6 +17,8 @@ public class GUImanager : MonoBehaviour {
     public float KT3timer = 10f;
     public float KT4timer = 10f;
     public float KT5timer = 10f;
+    public float KT1timer = 10f;
+    public float KT2timer = 10f;
 
     public GameObject[] units;
 
@@ -42,6 +44,7 @@ public class GUImanager : MonoBehaviour {
 
     void Update()
     {
+
         if (KT[0].gameObject.GetComponent<KTpoint>().capture == true)
         {
             KT3timer -= Time.deltaTime;
@@ -49,9 +52,18 @@ public class GUImanager : MonoBehaviour {
             {
                 KT3timer = 10f;
                 KT[0].gameObject.GetComponent<KTpoint>().KTvisual();
-                
+
             }
         }
+        else if (KT[0].gameObject.GetComponent<KTpoint>().capture == false)
+        {
+            KT3timer += Time.deltaTime;
+            if (KT3timer >= 10)
+            {
+                KT3timer = 10f;
+            }
+        }
+
         if (KT[1].gameObject.GetComponent<KTpoint>().capture == true)
         {
             KT4timer -= Time.deltaTime;
@@ -62,6 +74,15 @@ public class GUImanager : MonoBehaviour {
                 
             }
         }
+        else if (KT[1].gameObject.GetComponent<KTpoint>().capture == false)
+        {
+            KT4timer += Time.deltaTime;
+            if (KT4timer >= 10)
+            {
+                KT4timer = 10f;
+            }
+        }
+
         if (KT[2].gameObject.GetComponent<KTpoint>().capture == true)
         {
             KT5timer -= Time.deltaTime;
@@ -73,9 +94,41 @@ public class GUImanager : MonoBehaviour {
             }
         }
 
-        BOTtext.text = KT4timer.ToString();
-        MIDtext.text = KT5timer.ToString();
-        TOPtext.text = KT3timer.ToString();
+        else if (KT[2].gameObject.GetComponent<KTpoint>().capture == false)
+        {
+            KT5timer += Time.deltaTime;
+            if (KT5timer >= 10)
+            {
+                KT5timer = 10f;
+            }
+        }
+
+        //KT1
+        if (KT[3].gameObject.GetComponent<KTpoint>().capture == true)
+        {
+            KT1timer -= Time.deltaTime;
+            if (KT1timer <= 0)
+            {
+                KT1timer = 10f;
+                KT[3].gameObject.GetComponent<KTpoint>().KTvisual();
+
+            }
+        }
+        //KT2
+        if (KT[4].gameObject.GetComponent<KTpoint>().capture == true)
+        {
+            KT2timer -= Time.deltaTime;
+            if (KT2timer <= 0)
+            {
+                KT2timer = 10f;
+                KT[4].gameObject.GetComponent<KTpoint>().KTvisual();
+
+            }
+        }
+      
+        BOTtext.text = KT4timer.ToString("0");
+        MIDtext.text = KT5timer.ToString("0");
+        TOPtext.text = KT3timer.ToString("0");
 
         if (KT[0].gameObject.GetComponent<KTpoint>().image == 1)
         {

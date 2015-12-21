@@ -110,16 +110,14 @@ public class UnitLogic : MonoBehaviour
         if (targets[1] != null)
         {
             agent.destination = targets[1].transform.position;
+            
+            anim.SetBool("Run", true);
         }
-        if (targets[1] == null && targets [0] == null)
+        if (targets[1] == null)
         {
-            
-            
-            
-                targets[1] = GameObject.Find("KT2");
-            
-
+            anim.SetBool("Run", false);
         }
+
 
 
 
@@ -176,7 +174,7 @@ public class UnitLogic : MonoBehaviour
                 anim.SetBool("Attack", true);
                 _damage = hit(DAMAGE, DAMAGEboost); 
                 enemis[0].GetComponent<UnitLogic>().HP -= _damage;
-                
+                gameObject.transform.rotation = Quaternion.Slerp(gameObject.transform.rotation, targets[1].transform.rotation, Time.deltaTime * 2f );
                 canAttack = false;
             }
             
