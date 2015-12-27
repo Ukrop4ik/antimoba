@@ -7,6 +7,10 @@ using UnityEngine.Events;
 [System.Serializable]
 public class UnitLogic : MonoBehaviour
 {
+    public int Line;
+
+    float targetdist;
+    float enemydist;
 
     public float UnitID;
     
@@ -22,11 +26,13 @@ public class UnitLogic : MonoBehaviour
     public float DAMAGEboost = 1f; // множитель урона
     float boost = 0.2f; //шаг множителя
     public float KDAboost = 1f; // множитель скорости перезарядки
+    public float spellspeed;
 
     [SerializeField] private bool isEnemy = false;
     [SerializeField] private bool canAttack = false;
+    [SerializeField] GameObject staff;
 
-    [SerializeField] private bool kill = false;
+    public bool kill = false;
     private float KillTime;
 
     public float HPCase;
@@ -40,13 +46,14 @@ public class UnitLogic : MonoBehaviour
     [SerializeField] private GameObject bar;
     public UnitLogic enemyStat;
     public string targetname;
+    private SphereCollider collider;
+    private SpellSystem SpellSystem;
 
 
 
     public GameObject[] enemis;
     public GameObject[] targets;
     public GameObject[] kt;
-    List<GameObject> helper = new List<GameObject>();
 
 
 
@@ -58,7 +65,7 @@ public class UnitLogic : MonoBehaviour
         DAMAGE = 10f;
         KDA = 2f;
 
-        KillTime = 4f;
+        KillTime = 2f;
         HPCase = HP;
         HPbuffer = HP;
     }
@@ -76,12 +83,10 @@ public class UnitLogic : MonoBehaviour
         anim.SetBool("Run", true);
 
         // триггер коллайдер
-        var collider = gameObject.AddComponent<SphereCollider>();
-        collider.radius = 0.01524855f;
-        collider.center = new Vector3(0, 0.07f, 0);
-        collider.isTrigger = true;
+        StartCoroutine(colliderCreate());
+        StartCoroutine(targetsCreate());
 
-         kt = new GameObject[4];
+        kt = new GameObject[4];
 
         kt[0] = GameObject.Find("KT5");
         kt[1] = GameObject.Find("KT3");
@@ -100,20 +105,36 @@ public class UnitLogic : MonoBehaviour
 
         }
 
+        SpellSystem = GameObject.Find("SpellSystem").GetComponent<SpellSystem>();
+
 
 
     }
 
     void Update()
     {
-        
+        if (targets[1] != null)
+        {
+            targetdist = Vector3.Distance(gameObject.transform.position, targets[1].transform.position);
+        }
+        if (enemis[0] != null)
+        {
+            enemydist = Vector3.Distance(gameObject.transform.position, enemis[0].transform.position);
+        }
+
+        if (enemis[0] == null && targets[0] != null)
+        {
+            isEnemy = false; anim.SetBool("Attack", false);
+            targets[1] = targets[0];
+        }
+
         if (targets[1] != null)
         {
             agent.destination = targets[1].transform.position;
             
             anim.SetBool("Run", true);
         }
-        if (targets[1] == null)
+        if (targetdist <= 2.05f)
         {
             anim.SetBool("Run", false);
         }
@@ -131,18 +152,24 @@ public class UnitLogic : MonoBehaviour
             {
                 case 1:
                     targets[1] = GameObject.Find("KT5");
+                    targets[0] = GameObject.Find("KT5");
                     agent.destination = targets[1].transform.position;
                     gotostart = false;
+                    Line = 2;
                     break;
                 case 2:
                     targets[1] = GameObject.Find("KT3");
+                    targets[0] = GameObject.Find("KT3");
                     agent.destination = targets[1].transform.position;
                     gotostart = false;
+                    Line = 1;
                     break;
                 case 3:
                     targets[1] = GameObject.Find("KT4");
+                    targets[0] = GameObject.Find("KT4");
                     agent.destination = targets[1].transform.position;
                     gotostart = false;
+                    Line = 3;
                     break;
 
             }
@@ -157,36 +184,50 @@ public class UnitLogic : MonoBehaviour
         {
 
             targets[1] = targets[0];
-            targets[0] = null;
 
             
 
         }
 
 
-        // нанесение урона 
-        if (enemis[0] != null && isEnemy == true && enemis[0].tag != "DeadBody")
+        // нанесение урона воином
+        if (gameObject.name.Contains("MobBlue") || gameObject.name.Contains("MobRed"))
         {
-            float _damage;
+            if (enemis[0] != null && isEnemy == true && enemis[0].tag != "DeadBody")
+            {
+                float _damage;
 
+                if (canAttack == true)
+                {
+                    
+                    anim.SetBool("Attack", true);
+                    _damage = hit(DAMAGE, DAMAGEboost);
+                    enemis[0].GetComponent<UnitLogic>().HP -= _damage;
+                    gameObject.transform.rotation = Quaternion.Slerp(gameObject.transform.rotation, targets[1].transform.rotation, Time.deltaTime * 2f);
+                    canAttack = false;
+                }
+
+
+            }
+        }
+        // логика атаки мага
+        else if (enemis[0] != null && isEnemy == true && enemis[0].tag != "DeadBody")
+        {
             if (canAttack == true)
             {
+                GameObject spell = SpellSystem.spells[0];
+                spellspeed = 10f;
+                float _damage = hit(DAMAGE, DAMAGEboost);
                 anim.SetBool("Attack", true);
-                _damage = hit(DAMAGE, DAMAGEboost); 
-                enemis[0].GetComponent<UnitLogic>().HP -= _damage;
-                gameObject.transform.rotation = Quaternion.Slerp(gameObject.transform.rotation, targets[1].transform.rotation, Time.deltaTime * 2f );
+                spellcast(spell, staff, enemis[0], _damage, spellspeed);
                 canAttack = false;
             }
+        }
+
+
             
-
-        }
-
-
-        if (firstPoint != 0)
-        {
-            var collider = gameObject.GetComponent<SphereCollider>();
-            collider.radius = 0.1524855f;
-        }
+            
+        
 
 
         //смерть
@@ -233,7 +274,9 @@ public class UnitLogic : MonoBehaviour
 
         anim.SetBool("Kill", true);
 
+        targets[0] = null;
         targets[1] = null;
+        enemis[0] = null;
        
 
         kill = true;
@@ -253,29 +296,7 @@ public class UnitLogic : MonoBehaviour
 
         
 
-            if (gameObject.tag == other.gameObject.tag)
-            {
-            
-
-     
-            if (!helper.Contains(other.gameObject))
-            {
-                helper.Add(other.gameObject);
-            }
-            
-
-            }
         
-
-
-
-        if (initial == true)
-        {
-            
-            enemis = new GameObject[1];
-            targets = new GameObject[2];
-            initial = false;
-        }
         if (anim == null)
         {
             return;
@@ -284,52 +305,59 @@ public class UnitLogic : MonoBehaviour
         // заметили врага
         if ((enemis[0] == null && other.tag != gameObject.tag) && other.tag != "KT" && other.tag != "Spaun" && other.tag != "DeadBody")
         {
-            enemis[0] = other.gameObject;
+            enemis[0] = other.gameObject;   
             targetname = other.gameObject.name;
             isEnemy = true;
 
             // узнали путь к врагу, запомнив старый
             if (enemis[0] != null)
             {
-                // запомнили старый маршрут
-                targets[0] = targets[1];
-
-                //Текущий маршрут - враг
-                targets[1] = enemis[0];
-
+                targets[1] = gameObject;
             }
 
-
-
         }
-        else if (enemis[0] == null && other.gameObject.tag != "RedMob") { isEnemy = false; anim.SetBool("Attack", false); }
 
-
-
+        if (other.gameObject.name.Contains("Mage") && other.tag != gameObject.tag && targets[1] == null)
+        {
+            targets[1] = other.gameObject;
+        }
 
     }
     void OnTriggerExit(Collider other)
     {
-        if (enemis[0] == other.gameObject && other.tag == "DeadBody")
-        {
-            
-            targets[1] = targets[0];
-            
-
-        }
     }
 
-
-    void TargetSelect()
-    {
-
-    }
 
     public void ADboost()
     {
         DAMAGEboost += boost;
         Debug.Log("Юнит усилен на: " + (DAMAGEboost - 1));
         
+    }
+
+    private IEnumerator colliderCreate()
+    {
+        collider = gameObject.GetComponent<SphereCollider>();
+        yield return new WaitForSeconds(0.5f);
+        collider.enabled = true;
+    }
+    private IEnumerator targetsCreate()
+    {
+        enemis = new GameObject[1];
+        targets = new GameObject[2];
+        yield return new WaitForSeconds(0.5f);
+
+        
+    }
+
+    // для магов
+    void spellcast( GameObject spell, GameObject start, GameObject target, float damage, float speed)
+    {
+        GameObject _spell = Instantiate(spell, staff.transform.position, Quaternion.LookRotation(Vector3.forward)) as GameObject;
+        _spell.GetComponent<Spell>().damage = damage;
+        _spell.GetComponent<Spell>().speed = speed;
+        _spell.GetComponent<Spell>().starttarget = gameObject;
+        _spell.GetComponent<Spell>().target = target;
     }
 
 }

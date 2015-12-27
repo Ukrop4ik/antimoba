@@ -25,33 +25,54 @@ public class Logic : MonoBehaviour
 
     public GameObject enemyunits;
     public GameObject units;
+    public GameObject RedMage;
+    public GameObject BlueMage;
 
     float KDA = 30f;
+
+    public GameObject[] spaun = new GameObject[6];
 
     // Use this for initialization
     void Start()
     {
 
-        CreateUnit();
+        
+        StartCoroutine(CreateUnit());
 
+        
     }
 
 
 
     /* Спаун юнита, передем КТ, тип юнита, сторону */
-    public void CreateUnit()
+    public IEnumerator CreateUnit()
     {
 
-        for (int a = 0; a < 3; a++)
+
+        for (int i = 0; i < 1; i++)
         {
+
+            UnitSpaun(RedMage, enemySpaun, enemySpaunTarget, 1);
+            UnitSpaun(RedMage, enemySpaun1, enemySpaunTarget1, 2);
+            UnitSpaun(RedMage, enemySpaun2, enemySpaunTarget2, 3);
+
+            UnitSpaun(BlueMage, mySpaun, mySpaunTarget, 1);
+            UnitSpaun(BlueMage, mySpaun1, mySpaunTarget1, 2);
+            UnitSpaun(BlueMage, mySpaun2, mySpaunTarget2, 3);
+
+
             UnitSpaun(units, mySpaun, mySpaunTarget, 1);
             UnitSpaun(units, mySpaun1, mySpaunTarget1, 2);
             UnitSpaun(units, mySpaun2, mySpaunTarget2, 3);
+
+
             UnitSpaun(enemyunits, enemySpaun, enemySpaunTarget, 1);
             UnitSpaun(enemyunits, enemySpaun1, enemySpaunTarget1, 2);
             UnitSpaun(enemyunits, enemySpaun2, enemySpaunTarget2, 3);
-
+            yield return new WaitForSeconds(Random.Range(0.5f, 1f));
         }
+
+        
 
     }
 
@@ -64,7 +85,7 @@ public class Logic : MonoBehaviour
         KDA -= Time.deltaTime;
         if (KDA <= 0)
         {
-            CreateUnit();
+            StartCoroutine(CreateUnit());
             KDA = 30f;
         }
     }
@@ -76,8 +97,12 @@ public class Logic : MonoBehaviour
         Vector3 to = target.transform.position;
         
         GameObject ind = Instantiate(unit, _spaunpoint, Quaternion.FromToRotation(from, to)) as GameObject;
-        UnitLogic logic = ind.GetComponent<UnitLogic>();
-        logic.firstPoint = Point;
+
+
+            UnitLogic logic = ind.GetComponent<UnitLogic>();
+            logic.firstPoint = Point;
+        
+        
     }
 
 }

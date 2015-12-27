@@ -94,7 +94,7 @@ public class GUImanager : MonoBehaviour {
             }
         }
 
-        else if (KT[2].gameObject.GetComponent<KTpoint>().capture == false)
+        if (KT[2].gameObject.GetComponent<KTpoint>().capture == false)
         {
             KT5timer += Time.deltaTime;
             if (KT5timer >= 10)

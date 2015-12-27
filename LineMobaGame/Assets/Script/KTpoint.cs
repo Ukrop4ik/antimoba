@@ -8,7 +8,7 @@ public class KTpoint : MonoBehaviour {
 
     List<GameObject> blueList = new List<GameObject>();
     List<GameObject> redList = new List<GameObject>();
-
+    [SerializeField]EndGame endgame;
     [SerializeField]GameObject part1;
     [SerializeField]GameObject part2;
     [SerializeField]GameObject manager;
@@ -35,18 +35,20 @@ public class KTpoint : MonoBehaviour {
     */
     bool battle;
     bool empty;
+    bool bluewin;
+    bool redwin;
 
 
 
     void OnTriggerStay(Collider other)
     {
-        if (!blueList.Contains(other.gameObject) && other.gameObject.tag == "BlueMob")
+        if (!blueList.Contains(other.gameObject) && other.gameObject.tag == "BlueMob" && !other.gameObject.name.Contains("Mage"))
         {
             blueList.Add(other.gameObject);
             //Debug.Log("BlueMob in " + gameObject.name + " count = " + blueList.Count);
         }
 
-        if (!redList.Contains(other.gameObject) && other.gameObject.tag == "RedMob")
+        if (!redList.Contains(other.gameObject) && other.gameObject.tag == "RedMob" && !other.gameObject.name.Contains("Mage"))
         {
             redList.Add(other.gameObject);
             //Debug.Log("BlueMob in " + gameObject.name + " count = " + blueList.Count);
@@ -66,42 +68,42 @@ public class KTpoint : MonoBehaviour {
         {
             
                 GameObject KT2 = GameObject.Find("KT2");
-                other.gameObject.GetComponent<UnitLogic>().targets[1] = KT2;
+                other.gameObject.GetComponent<UnitLogic>().targets[0] = KT2;
        
         }
         if (gameObject.name == "KT5" && blueList.Count == 0 && _part2.startColor == red)
         {
 
             GameObject KT2 = GameObject.Find("KT1");
-            other.gameObject.GetComponent<UnitLogic>().targets[1] = KT2;
+            other.gameObject.GetComponent<UnitLogic>().targets[0] = KT2;
 
         }
         if (gameObject.name == "KT3" && redList.Count == 0 && _part2.startColor == blue)
         {
 
             GameObject KT2 = GameObject.Find("KT2");
-            other.gameObject.GetComponent<UnitLogic>().targets[1] = KT2;
+            other.gameObject.GetComponent<UnitLogic>().targets[0] = KT2;
 
         }
         if (gameObject.name == "KT3" && blueList.Count == 0 && _part2.startColor == red)
         {
 
             GameObject KT2 = GameObject.Find("KT1");
-            other.gameObject.GetComponent<UnitLogic>().targets[1] = KT2;
+            other.gameObject.GetComponent<UnitLogic>().targets[0] = KT2;
 
         }
         if (gameObject.name == "KT4" && redList.Count == 0 && _part2.startColor == blue)
         {
 
             GameObject KT2 = GameObject.Find("KT2");
-            other.gameObject.GetComponent<UnitLogic>().targets[1] = KT2;
+            other.gameObject.GetComponent<UnitLogic>().targets[0] = KT2;
 
         }
         if (gameObject.name == "KT4" && blueList.Count == 0 && _part2.startColor == red)
         {
 
             GameObject KT2 = GameObject.Find("KT1");
-            other.gameObject.GetComponent<UnitLogic>().targets[1] = KT2;
+            other.gameObject.GetComponent<UnitLogic>().targets[0] = KT2;
 
         }
 
@@ -111,7 +113,14 @@ public class KTpoint : MonoBehaviour {
 
     void OnTriggerExit(Collider other)
     {
-
+        if (other.gameObject.tag == "BlueMob")
+        {
+            blueList.Remove(other.gameObject);
+        }
+        if (other.gameObject.tag == "RedMob")
+        {
+            redList.Remove(other.gameObject);
+        }
     }
 
     void Start()
@@ -127,28 +136,10 @@ public class KTpoint : MonoBehaviour {
     void Update()
     {
 
+        RemoveUnitsinList();
+        BlueModCount = blueList.Count;
+        RedModCount = redList.Count;
 
-
-
-        if (tictac == true)
-        {
-            tic -= Time.deltaTime;
-            if (tic <= 0)
-            {
-
-                tictac = false;
-                RemoveUnitsinList();
-
-                BlueModCount = blueList.Count;
-                // Debug.Log("RedMob in " + gameObject.name + " count = " + RedModCount);
-                RedModCount = redList.Count;
-                // Debug.Log("BlueMob in " + gameObject.name + " count = " + BlueModCount);
-
-                Debug.Log("Tik-Tak");
-                tictac = true;
-                tic = 0.2f;
-            }
-        }
 
         if (red != null && inistart == false)
         {
@@ -156,61 +147,48 @@ public class KTpoint : MonoBehaviour {
 
             battle = BlueModCount != 0 && RedModCount != 0;
             empty = BlueModCount == 0 && RedModCount == 0;
+            redwin = BlueModCount == 0 && RedModCount != 0;
+            bluewin = BlueModCount != 0 && RedModCount == 0;
 
-
-            if (BlueModCount == 0 && RedModCount != 0 && KTpointStatus != 3)
+            if (redwin && KTpointStatus != 3)
             {
                 capture = true;
-                KTpointStatus = 3;      
+                  
 
             }
-            else if (battle || empty)
-            {
-                capture = false;
-            }
 
 
-            if (BlueModCount != 0 && RedModCount == 0 && KTpointStatus != 2)
+            if (bluewin && KTpointStatus != 2)
             {
                 capture = true;
-                KTpointStatus = 2;
-
-            }
-            else if (battle || empty)
-            {
-                capture = false;
-            }
-
-
-            if (BlueModCount == 0 && RedModCount == 0 && KTpointStatus != 1)
-            {
                 
-                capture = false;
-                KTpointStatus = 1;
 
             }
             else if (battle || empty)
             {
                 capture = false;
             }
+            
+
 
 
 
         }
-        
-        
+       
+
+
 
     }
 
     void RemoveUnitsinList()
     {
         foreach (GameObject obj in blueList.Select(x => x).ToArray())
-            if (obj == null)
+            if (obj.GetComponent<UnitLogic>().kill == true)
             {
                 blueList.Remove(obj);
             }
         foreach (GameObject obj in redList.Select(x => x).ToArray())
-            if (obj == null)
+            if (obj.GetComponent<UnitLogic>().kill == true)
             {
                 redList.Remove(obj);
             }
@@ -218,27 +196,49 @@ public class KTpoint : MonoBehaviour {
 
     public void KTvisual()
     {
-        switch (KTpointStatus)
-        {
-            case 3:
-                capture = false;
-                _part1.startColor = red;
-                _part2.startColor = red;
-                image = 3;
-                break;
+        int a = 0;
 
-            case 2:
-                capture = false;
-                _part1.startColor = blue;
-                _part2.startColor = blue;
-                image = 2;
-                break;
-            case 1:
-                capture = false;
-                _part1.startColor = neutral;
-                _part2.startColor = neutral;
-                image = 1;
-                break;
+
+            if (redwin)
+            {
+                a = 3;
+            }
+            if (bluewin)
+            {
+                a = 2;
+            }
+
+        if (a != 0)
+        {
+            switch (a)
+            {
+                case 3:
+                    capture = false;
+                    KTpointStatus = 3;
+                    _part1.startColor = red;
+                    _part2.startColor = red;
+                    EndGame();
+                    image = 3;
+                    a = 0;
+                    break;
+
+                case 2:
+                    capture = false;
+                    KTpointStatus = 2;
+                    _part1.startColor = blue;
+                    _part2.startColor = blue;
+                    EndGame();
+                    image = 2;
+                    a = 0;
+                    break;
+                case 1:
+                    capture = false;
+                    _part1.startColor = neutral;
+                    _part2.startColor = neutral;
+                    image = 1;
+                    a = 0;
+                    break;
+            }
         }
     }
 
@@ -255,6 +255,18 @@ public class KTpoint : MonoBehaviour {
             _part1.startColor = red;
             _part2.startColor = red;
             KTpointStatus = 3;
+        }
+    }
+
+    void EndGame()
+    {
+        if (_part1.startColor == red && gameObject.name == "KT1")
+        {
+            endgame.defeat();
+        }
+        if (_part1.startColor == blue && gameObject.name == "KT2")
+        {
+            endgame.victory();
         }
     }
 }
