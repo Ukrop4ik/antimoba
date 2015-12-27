@@ -1,0 +1,313 @@
+fileFormatVersion: 2
+guid: 282830120bfba194fa7ffb6c32867185
+timeCreated: 1450914703
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Armature
+    100002: Camera
+    100004: DounArm.R
+    100006: DounArm/L
+    100008: DounNeck.L
+    100010: DounNeck.R
+    100012: Foot.L
+    100014: Foot.L_end
+    100016: Foot.R
+    100018: Foot.R_end
+    100020: Hand.L
+    100022: Hand.L_end
+    100024: Hand.R
+    100026: Hand.R_end
+    100028: Head
+    100030: Head_end
+    100032: Lamp
+    100034: re
+    100036: //RootNode
+    100038: UpArm.L
+    100040: UpArm.R
+    100042: UpNeck.L
+    100044: UpNeck.R
+    400000: Armature
+    400002: Camera
+    400004: DounArm.R
+    400006: DounArm/L
+    400008: DounNeck.L
+    400010: DounNeck.R
+    400012: Foot.L
+    400014: Foot.L_end
+    400016: Foot.R
+    400018: Foot.R_end
+    400020: Hand.L
+    400022: Hand.L_end
+    400024: Hand.R
+    400026: Hand.R_end
+    400028: Head
+    400030: Head_end
+    400032: Lamp
+    400034: re
+    400036: //RootNode
+    400038: UpArm.L
+    400040: UpArm.R
+    400042: UpNeck.L
+    400044: UpNeck.R
+    4300000: re
+    9500000: //RootNode
+    13700000: re
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: '
+
+      Imported file ''untitled'' conversion failed: Required human bone ''Head'' not
+      found
+
+
+'
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 3
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human:
+    - boneName: Armature
+      humanName: Hips
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: UpNeck.L
+      humanName: LeftUpperLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: UpNeck.R
+      humanName: RightUpperLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: DounNeck.L
+      humanName: LeftLowerLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: DounNeck.R
+      humanName: RightLowerLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Foot.L
+      humanName: LeftFoot
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Foot.R
+      humanName: RightFoot
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: DounArm/L
+      humanName: Spine
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: Hand.L
+      humanName: LeftShoulder
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    skeleton:
+    - name: untitled(Clone)
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+      transformModified: 1
+    - name: Armature
+      position: {x: -0.56358606, y: 2.010441, z: -0.16643877}
+      rotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
+      scale: {x: 100, y: 100.00001, z: 100.00001}
+      transformModified: 1
+    - name: Head
+      position: {x: 0.005676242, y: -0.004652749, z: -0.0009823369}
+      rotation: {x: 0.7071068, y: 0, z: -0, w: 0.7071067}
+      scale: {x: 1, y: 1, z: 1}
+      transformModified: 1
+    - name: Head_end
+      position: {x: -0, y: 0.0029232448, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+      transformModified: 1
+    - name: UpArm.L
+      position: {x: -0, y: 0, z: -0.00078095077}
+      rotation: {x: -0.40144536, y: 0.58210784, z: -0.5821077, w: -0.4014258}
+      scale: {x: 0.99999994, y: 0.9999999, z: 0.99999994}
+      transformModified: 1
+    - name: DounArm/L
+      position: {x: 1.2905584e-12, y: 0.003592365, z: -7.958079e-15}
+      rotation: {x: 0.7188538, y: 0.67818576, z: 0.06265189, w: 0.13924141}
+      scale: {x: 1.312612, y: 1.3126116, z: 1.3126122}
+      transformModified: 1
+    - name: Hand.L
+      position: {x: 1.4901161e-10, y: 0.0036771481, z: 0}
+      rotation: {x: -0.098339334, y: -0.23369263, z: -0.46711636, w: 0.8470652}
+      scale: {x: 0.99999994, y: 0.9999999, z: 1}
+      transformModified: 1
+    - name: Hand.L_end
+      position: {x: -0, y: 0.0028209456, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+      transformModified: 1
+    - name: UpArm.R
+      position: {x: 0.01125, y: -0.00004, z: -0.00078}
+      rotation: {x: -0.27500105, y: -0.6317823, z: 0.7245953, w: -0.013685558}
+      scale: {x: 0.9999999, y: 0.9999998, z: 0.99999994}
+      transformModified: 1
+    - name: DounArm.R
+      position: {x: 0.00031996856, y: 0.002949963, z: 0.00089005317}
+      rotation: {x: 0.5813973, y: 0.19371766, z: -0.32642964, w: 0.71964884}
+      scale: {x: 1, y: 1, z: 1.0000001}
+      transformModified: 1
+    - name: Hand.R
+      position: {x: 1.3038516e-10, y: 0.0036771484, z: 1.4901161e-10}
+      rotation: {x: 0.08898964, y: -0.5720056, z: 0.11003354, w: 0.8079499}
+      scale: {x: 0.99999994, y: 1, z: 1}
+      transformModified: 1
+    - name: Hand.R_end
+      position: {x: -0, y: 0.0028209456, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+      transformModified: 1
+    - name: UpNeck.L
+      position: {x: 0.0039070677, y: -0.0016643866, z: -0.00971517}
+      rotation: {x: -0.06650521, y: 0.7509586, z: -0.6552795, w: -0.047401987}
+      scale: {x: 1, y: 1, z: 1}
+      transformModified: 1
+    - name: DounNeck.L
+      position: {x: 9.778887e-11, y: 0.00486079, z: -1.6763806e-10}
+      rotation: {x: -0.07217671, y: 0.9795631, z: -0.015728448, w: 0.18708085}
+      scale: {x: 0.9999998, y: 1.0000001, z: 1}
+      transformModified: 1
+    - name: Foot.L
+      position: {x: 1.8626451e-11, y: 0.004485729, z: -2.1420418e-10}
+      rotation: {x: -0.59688103, y: -0.27824113, z: 0.32863414, w: 0.6769893}
+      scale: {x: 1, y: 1, z: 1}
+      transformModified: 1
+    - name: Foot.L_end
+      position: {x: -0, y: 0.0021368419, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+      transformModified: 1
+    - name: UpNeck.R
+      position: {x: 0.007364653, y: -0.0016643866, z: -0.00971517}
+      rotation: {x: 0.061701167, y: 0.7236543, z: -0.684758, w: 0.06019983}
+      scale: {x: 1, y: 1.0000002, z: 1.0000001}
+      transformModified: 1
+    - name: DounNeck.R
+      position: {x: 4.831236e-10, y: 0.0048607886, z: 2.3283064e-12}
+      rotation: {x: 0.06235833, y: 0.98411584, z: -0.03960193, w: 0.16142868}
+      scale: {x: 1, y: 1.0000001, z: 1}
+      transformModified: 1
+    - name: Foot.R
+      position: {x: 3.352761e-10, y: 0.0044857273, z: 8.1956386e-10}
+      rotation: {x: -0.4755501, y: -0.48938376, z: 0.46492624, w: 0.5640915}
+      scale: {x: 1.0000001, y: 1.0000001, z: 1.0000001}
+      transformModified: 1
+    - name: Foot.R_end
+      position: {x: -0, y: 0.002136842, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+      transformModified: 1
+    - name: Camera
+      position: {x: -7.4811316, y: 5.343665, z: 6.5076394}
+      rotation: {x: 0.21061137, y: 0.90524006, z: -0.089281626, w: -0.35806713}
+      scale: {x: 99.99999, y: 100.00001, z: 100}
+      transformModified: 1
+    - name: Lamp
+      position: {x: -4.0762453, y: 5.903862, z: -1.005454}
+      rotation: {x: 0.16907571, y: -0.75588036, z: 0.27217132, w: 0.57094747}
+      scale: {x: 100.000015, y: 100, z: 100.00001}
+      transformModified: 1
+    - name: re
+      position: {x: -0.00000011920929, y: 0.00000023841858, z: 0}
+      rotation: {x: 0.000000081460335, y: 0, z: 0, w: 1}
+      scale: {x: 100, y: 100, z: 100}
+      transformModified: 1
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 3
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
