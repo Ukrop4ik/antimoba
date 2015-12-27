@@ -57,12 +57,6 @@
     <Reference Include="UnityEngine.Networking">
       <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.Networking">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
@@ -74,12 +68,21 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Script\DamageManager.cs" />
+    <Compile Include="Assets\Script\EndGame.cs" />
+    <Compile Include="Assets\Script\EventManager.cs" />
+    <Compile Include="Assets\Script\GUImanager.cs" />
     <Compile Include="Assets\Script\HPBAR.cs" />
+    <Compile Include="Assets\Script\KTpoint.cs" />
     <Compile Include="Assets\Script\Logic.cs" />
-    <Compile Include="Assets\Script\SpaunPoint.cs" />
+    <Compile Include="Assets\Script\Rotate.cs" />
+    <Compile Include="Assets\Script\Spell.cs" />
+    <Compile Include="Assets\Script\SpellSystem.cs" />
+    <Compile Include="Assets\Script\StatControl.cs" />
     <Compile Include="Assets\Script\UnitLogic.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\SkeletonData\animations.txt" />
     <None Include="Assets\Standard Assets\Cameras\CameraGuidelines.txt" />
     <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
     <None Include="Assets\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />
